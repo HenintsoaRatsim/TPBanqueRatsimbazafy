@@ -6,6 +6,7 @@ package com.ratsimbazafy.tpbanqueratsimbazafy.service;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
 import jakarta.annotation.sql.DataSourceDefinition;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
@@ -34,7 +35,7 @@ import java.util.List;
         }
 )
 
-@Dependent
+@ApplicationScoped
 public class GestionnaireCompte {
 
     @PersistenceContext(unitName = "banquePU")
@@ -46,7 +47,7 @@ public class GestionnaireCompte {
     }
 
     public List<CompteBancaire> getAllComptes() {
-        Query query = em.createNamedQuery("Comptebancaire.findAll");
+        Query query = em.createNamedQuery("comptebancaire.findAll");
         return query.getResultList();
     }
 

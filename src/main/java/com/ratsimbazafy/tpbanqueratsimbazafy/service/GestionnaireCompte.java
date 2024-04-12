@@ -43,8 +43,22 @@ public class GestionnaireCompte {
     private EntityManager em;
 
     @Transactional
-    public void creerCompte(CompteBancaire c) {
+    public boolean creerCompte(CompteBancaire c) {
+        boolean erreur = false;
+        if (c.getSolde() < 0) {
+            Util.messageErreur("Le montant doit être positif ", "erreur montant", "form:montant");
+            erreur = true;
+        }
+        if (c.getNom().equalsIgnoreCase("")) {
+            Util.messageErreur("Le nom ne doit pas être vide ", "nom vide", "form:nom");
+            erreur = true;
+        }
+        if (erreur) {
+            return erreur;
+        }
         em.persist(c);
+        Util.addFlashInfoMessage("l'ajout du client  " + c.getNom() + " est correctement effectué  ");
+        return false;
     }
 
     public List<CompteBancaire> getAllComptes() {
@@ -93,7 +107,7 @@ public class GestionnaireCompte {
             compteDestinataire.deposer(montant);
             this.update(compteSource);
             this.update(compteDestinataire);
-            Util.addFlashInfoMessage("Transfert de "+montant+"  correctement effectué entre "+compteSource.getNom()+" et "+compteDestinataire.getNom());
+            Util.addFlashInfoMessage("Transfert de " + montant + "  correctement effectué entre " + compteSource.getNom() + " et " + compteDestinataire.getNom());
             return true;
 
         } catch (Exception e) {

@@ -5,6 +5,7 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.jsf;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -22,10 +23,17 @@ public class ListeComptes implements Serializable {
 
     @Inject
     private GestionnaireCompte gestionnaireCompte;
+
     public ListeComptes() {
     }
-    public List<CompteBancaire> getAllComptes()
-    {
+
+    public List<CompteBancaire> getAllComptes() {
         return gestionnaireCompte.getAllComptes();
+    }
+
+    public String supprimerCompte(CompteBancaire compteBancaire) {
+        gestionnaireCompte.supprimerCompte(compteBancaire);
+        Util.addFlashInfoMessage("Compte de " + compteBancaire.getNom() + " supprimé");
+        return "listeComptes?faces-redirect=true";
     }
 }

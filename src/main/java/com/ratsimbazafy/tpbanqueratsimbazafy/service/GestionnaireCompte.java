@@ -88,7 +88,7 @@ public class GestionnaireCompte {
                 Util.messageErreur("le montant doit être plus de 0 ", "erreur montant", "form:montant");
                 erreur = true;
             }
-            if(erreur){
+            if (erreur) {
                 return erreur;
             }
             c.deposer(montant);
@@ -100,6 +100,7 @@ public class GestionnaireCompte {
             return true;
         }
     }
+
     @Transactional
     public boolean Retrait(CompteBancaire c, int montant) {
         try {
@@ -108,7 +109,7 @@ public class GestionnaireCompte {
                 Util.messageErreur("le montant est suppérieur au solde", "erreur montant", "form:montant");
                 erreur = true;
             }
-            if(erreur){
+            if (erreur) {
                 return erreur;
             }
             c.retirer(montant);
@@ -119,6 +120,11 @@ public class GestionnaireCompte {
             System.out.println(e.getMessage());
             return true;
         }
+    }
+
+    @Transactional
+    public void supprimerCompte(CompteBancaire compte) {
+        em.remove(em.merge(compte));
     }
 
     @Transactional

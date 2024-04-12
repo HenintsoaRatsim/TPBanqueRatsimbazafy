@@ -56,4 +56,28 @@ public class GestionnaireCompte {
         return (long) query.getSingleResult();
     }
 
+    public CompteBancaire findById(Long id) {
+        return em.find(CompteBancaire.class, id);
+    }
+
+    @Transactional
+    public CompteBancaire update(CompteBancaire compteBancaire) {
+        return em.merge(compteBancaire);
+    }
+
+    @Transactional
+    public void transferer(Long idSource, Long idDestinataire, int montant) {
+        try {
+            CompteBancaire compteSource = this.findById(idSource);
+            CompteBancaire compteDestinataire = this.findById(idDestinataire);
+            compteSource.retirer(montant);
+            compteDestinataire.deposer(montant);
+            this.update(compteSource);
+            this.update(compteDestinataire);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

@@ -80,6 +80,30 @@ public class GestionnaireCompte {
         return em.merge(compteBancaire);
     }
 
+    
+    @Transactional
+    public boolean Modification(CompteBancaire c,String nom,int solde) {
+        try {
+            boolean erreur = false;
+            if (c.getNom().length()==0) {
+                Util.messageErreur("Ajouter un nom svp", "nom vide", "form:nom");
+                erreur = true;
+            }
+            if (c.getSolde()<0) {
+                Util.messageErreur("Le solde doit etre plus ou egal a 0", "erreur solde", "form:nom");
+                erreur = true;
+            }
+            if (erreur) {
+                return erreur;
+            }
+            this.update(c);
+            Util.addFlashInfoMessage("L'nom   " + nom + " changé en " + c.getNom() + "et le solde "+solde+ " changé en"+c.getSolde());
+            return false;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+    }
     @Transactional
     public boolean Ajouter(CompteBancaire c, int montant) {
         try {

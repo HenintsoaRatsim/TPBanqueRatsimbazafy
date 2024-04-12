@@ -5,6 +5,7 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.service;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
@@ -66,17 +67,38 @@ public class GestionnaireCompte {
     }
 
     @Transactional
-    public void transferer(Long idSource, Long idDestinataire, int montant) {
+    public boolean transferer(Long idSource, Long idDestinataire, int montant) {
         try {
+            boolean erreur = false;
             CompteBancaire compteSource = this.findById(idSource);
             CompteBancaire compteDestinataire = this.findById(idDestinataire);
+            if (compteSource == null || compteDestinataire == null) {
+                Util.messageErreur("Aucun compte avec l'id " + idSource, "Aucun compte avec l'id " + idSource, "form:source");
+                erreur = true;
+            }
+            if (compteDestinataire == null) {
+                Util.messageErreur("Aucun compte avec l'id " + idDestinataire, "Aucun compte avec l'id " + idDestinataire, "form:destinataire");
+                erreur = true;
+            } else {
+                if (compteSource.getSolde() < montant) {
+                    Util.messageErreur("solde compte source insuffisant ", "solde compte source insuffisan ", "form:montant");
+                    erreur = true;
+                }
+            }
+
+            if (erreur) {
+                return false;
+            }
             compteSource.retirer(montant);
             compteDestinataire.deposer(montant);
             this.update(compteSource);
             this.update(compteDestinataire);
+            Util.addFlashInfoMessage("Transfert de "+montant+"  correctement effectué entre "+compteSource.getNom()+" et "+compteDestinataire.getNom());
+            return true;
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 

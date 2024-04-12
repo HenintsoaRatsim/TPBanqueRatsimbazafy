@@ -56,8 +56,8 @@ public class Transfert implements Serializable {
     }
 
     public String transferer() {
-        System.out.println(this.montant + "-----------------------------");
-        gestionnaireCompte.transferer(this.idSource, this.idDestinataire, this.montant);
-        return "listeComptes";
+        boolean rep=gestionnaireCompte.transferer(this.idSource, this.idDestinataire, this.montant);
+        if(!rep)return null;
+        return "listeComptes?faces-redirect=true";
     }
 }

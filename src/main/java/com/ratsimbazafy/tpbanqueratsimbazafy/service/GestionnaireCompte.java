@@ -81,6 +81,47 @@ public class GestionnaireCompte {
     }
 
     @Transactional
+    public boolean Ajouter(CompteBancaire c, int montant) {
+        try {
+            boolean erreur = false;
+            if (montant <= 0) {
+                Util.messageErreur("le montant doit être plus de 0 ", "erreur montant", "form:montant");
+                erreur = true;
+            }
+            if(erreur){
+                return erreur;
+            }
+            c.deposer(montant);
+            this.update(c);
+            Util.addFlashInfoMessage("L'ajout  de " + montant + " est correctement effectué pour " + c.getNom());
+            return false;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+    }
+    @Transactional
+    public boolean Retrait(CompteBancaire c, int montant) {
+        try {
+            boolean erreur = false;
+            if (montant > c.getSolde()) {
+                Util.messageErreur("le montant est suppérieur au solde", "erreur montant", "form:montant");
+                erreur = true;
+            }
+            if(erreur){
+                return erreur;
+            }
+            c.retirer(montant);
+            this.update(c);
+            Util.addFlashInfoMessage("Le retrait  de " + montant + " est correctement effectué pour " + c.getNom());
+            return false;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+    }
+
+    @Transactional
     public boolean transferer(Long idSource, Long idDestinataire, int montant) {
         try {
             boolean erreur = false;

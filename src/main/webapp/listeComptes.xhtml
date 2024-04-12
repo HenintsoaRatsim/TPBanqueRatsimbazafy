@@ -22,7 +22,8 @@
                             <f:facet name="header">
                                 <h:outputText value="Id"/>
                             </f:facet>
-                            <h:outputText value="#{item.id}"/>
+                            <h:link outcome="mouvement?id=#{item.id}" 
+                                    value="#{item.id}"/>
                         </h:column>
 
                         <h:column>

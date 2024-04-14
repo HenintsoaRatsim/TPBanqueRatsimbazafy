@@ -5,11 +5,8 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.service;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
-import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;

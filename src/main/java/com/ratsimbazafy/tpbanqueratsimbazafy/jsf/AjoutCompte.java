@@ -5,6 +5,7 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.jsf;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -37,18 +38,25 @@ public class AjoutCompte implements Serializable {
     public void setMontant(int montant) {
         this.montant = montant;
     }
-    
+
     @Inject
     private GestionnaireCompte gestionnaireCompte;
+
     /**
      * Creates a new instance of AjoutCompte
      */
     public AjoutCompte() {
     }
-    
-    public String ajouter(){
-        boolean rep=gestionnaireCompte.creerCompte(new CompteBancaire(this.nom,this.montant));
-        if(rep)return null;
-        return "listeComptes?faces-redirect=true";
+
+    public String ajouter() {
+        try {
+            CompteBancaire c = new CompteBancaire(this.nom, this.montant);
+            gestionnaireCompte.creerCompte(c);
+            Util.addFlashInfoMessage("l'ajout du client  " + c.getNom() + " est correctement effectué  ");
+            return "listeComptes?faces-redirect=true";
+        } catch (Exception e) {
+            Util.VerifExecption(e);
+            return null;
+        }
     }
 }

@@ -5,6 +5,7 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.jsf;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
@@ -73,15 +74,21 @@ public class Mouvement implements Serializable {
     }
 
     public String enregistrerMouvement() {
-
-        if(this.typeMouvement.equalsIgnoreCase("ajout")){
-            boolean rep =this.gestionnaireCompte.Ajouter(compte, montant);
-            if(rep)return null;
+        try {
+            if (this.typeMouvement.equalsIgnoreCase("ajout")) {
+                this.getCompte().deposer(montant);
+                this.gestionnaireCompte.update(this.getCompte());
+                Util.addFlashInfoMessage("L'ajout  de " + montant + " est correctement effectué pour " + this.getCompte().getNom());
+            }
+            if (this.typeMouvement.equalsIgnoreCase("retrait")) {
+                this.getCompte().retirer(montant);
+                this.gestionnaireCompte.update(this.getCompte());
+                Util.addFlashInfoMessage("Le retrait  de " + montant + " est correctement effectué pour " + this.getCompte().getNom());
+            }
+            return "listeComptes?faces-redirect=true";
+        } catch (Exception e) {
+            Util.VerifExecption(e);
+            return null;
         }
-        if(this.typeMouvement.equalsIgnoreCase("retrait")){
-            boolean rep =this.gestionnaireCompte.Retrait(compte, montant);
-            if(rep)return null;
-        }
-        return "listeComptes?faces-redirect=true";
     }
 }

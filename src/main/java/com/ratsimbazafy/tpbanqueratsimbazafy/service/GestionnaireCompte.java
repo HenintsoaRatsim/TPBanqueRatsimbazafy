@@ -43,22 +43,8 @@ public class GestionnaireCompte {
     private EntityManager em;
 
     @Transactional
-    public boolean creerCompte(CompteBancaire c) {
-        boolean erreur = false;
-        if (c.getSolde() < 0) {
-            Util.messageErreur("Le montant doit être positif ", "erreur montant", "form:montant");
-            erreur = true;
-        }
-        if (c.getNom().equalsIgnoreCase("")) {
-            Util.messageErreur("Le nom ne doit pas être vide ", "nom vide", "form:nom");
-            erreur = true;
-        }
-        if (erreur) {
-            return erreur;
-        }
+    public void creerCompte(CompteBancaire c) {
         em.persist(c);
-        Util.addFlashInfoMessage("l'ajout du client  " + c.getNom() + " est correctement effectué  ");
-        return false;
     }
 
     public List<CompteBancaire> getAllComptes() {
@@ -72,78 +58,16 @@ public class GestionnaireCompte {
     }
 
     public CompteBancaire findById(Long id) {
-        return em.find(CompteBancaire.class, id);
+        CompteBancaire c = em.find(CompteBancaire.class, id);
+        if (c == null) {
+            throw new RuntimeException("Aucun compte avec cette id.");
+        }
+        return c;
     }
 
     @Transactional
     public CompteBancaire update(CompteBancaire compteBancaire) {
         return em.merge(compteBancaire);
-    }
-
-    
-    @Transactional
-    public boolean Modification(CompteBancaire c,String nom,int solde) {
-        try {
-            boolean erreur = false;
-            if (c.getNom().length()==0) {
-                Util.messageErreur("Ajouter un nom svp", "nom vide", "form:nom");
-                erreur = true;
-            }
-            if (c.getSolde()<0) {
-                Util.messageErreur("Le solde doit etre plus ou egal a 0", "erreur solde", "form:nom");
-                erreur = true;
-            }
-            if (erreur) {
-                return erreur;
-            }
-            this.update(c);
-            Util.addFlashInfoMessage("L'nom   " + nom + " changé en " + c.getNom() + "et le solde "+solde+ " changé en"+c.getSolde());
-            return false;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
-    }
-    @Transactional
-    public boolean Ajouter(CompteBancaire c, int montant) {
-        try {
-            boolean erreur = false;
-            if (montant <= 0) {
-                Util.messageErreur("le montant doit être plus de 0 ", "erreur montant", "form:montant");
-                erreur = true;
-            }
-            if (erreur) {
-                return erreur;
-            }
-            c.deposer(montant);
-            this.update(c);
-            Util.addFlashInfoMessage("L'ajout  de " + montant + " est correctement effectué pour " + c.getNom());
-            return false;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
-    }
-
-    @Transactional
-    public boolean Retrait(CompteBancaire c, int montant) {
-        try {
-            boolean erreur = false;
-            if (montant > c.getSolde()) {
-                Util.messageErreur("le montant est suppérieur au solde", "erreur montant", "form:montant");
-                erreur = true;
-            }
-            if (erreur) {
-                return erreur;
-            }
-            c.retirer(montant);
-            this.update(c);
-            Util.addFlashInfoMessage("Le retrait  de " + montant + " est correctement effectué pour " + c.getNom());
-            return false;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
     }
 
     @Transactional
@@ -152,39 +76,11 @@ public class GestionnaireCompte {
     }
 
     @Transactional
-    public boolean transferer(Long idSource, Long idDestinataire, int montant) {
-        try {
-            boolean erreur = false;
-            CompteBancaire compteSource = this.findById(idSource);
-            CompteBancaire compteDestinataire = this.findById(idDestinataire);
-            if (compteSource == null || compteDestinataire == null) {
-                Util.messageErreur("Aucun compte avec l'id " + idSource, "Aucun compte avec l'id " + idSource, "form:source");
-                erreur = true;
-            }
-            if (compteDestinataire == null) {
-                Util.messageErreur("Aucun compte avec l'id " + idDestinataire, "Aucun compte avec l'id " + idDestinataire, "form:destinataire");
-                erreur = true;
-            } else {
-                if (compteSource.getSolde() < montant) {
-                    Util.messageErreur("solde compte source insuffisant ", "solde compte source insuffisan ", "form:montant");
-                    erreur = true;
-                }
-            }
-
-            if (erreur) {
-                return false;
-            }
-            compteSource.retirer(montant);
-            compteDestinataire.deposer(montant);
-            this.update(compteSource);
-            this.update(compteDestinataire);
-            Util.addFlashInfoMessage("Transfert de " + montant + "  correctement effectué entre " + compteSource.getNom() + " et " + compteDestinataire.getNom());
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+    public void transferer(CompteBancaire source, CompteBancaire destinatire, int montant) {
+        source.retirer(montant);
+        destinatire.deposer(montant);
+        this.update(source);
+        this.update(destinatire);
     }
 
 }

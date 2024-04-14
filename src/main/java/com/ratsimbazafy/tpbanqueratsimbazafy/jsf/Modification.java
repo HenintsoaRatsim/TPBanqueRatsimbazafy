@@ -5,6 +5,7 @@
 package com.ratsimbazafy.tpbanqueratsimbazafy.jsf;
 
 import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -71,8 +72,16 @@ public class Modification implements Serializable {
     }
 
     public String enregistrerModification() {
-        boolean rep = gestionnaireCompte.Modification(this.compte,this.nom,this.Solde);
-        if(rep)return null;
-        return "listeComptes?faces-redirect=true";
+        try {
+            CompteBancaire c = new CompteBancaire(this.getNom(), this.getSolde());
+            Util.addFlashInfoMessage("Le nom   " + this.getNom() + " changé en " + this.getCompte().getNom() + "et le solde " + this.getSolde() + " changé en" + this.getCompte().getSolde());
+            this.getCompte().setNom(c.getNom());
+            this.getCompte().setSolde(this.getSolde());
+            gestionnaireCompte.update(this.getCompte());
+            return "listeComptes?faces-redirect=true";
+        } catch (Exception e) {
+            Util.VerifExecption(e);
+            return null;
+        }
     }
 }

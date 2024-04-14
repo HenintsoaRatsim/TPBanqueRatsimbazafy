@@ -28,10 +28,10 @@
                         <h:outputText value="#{modification.compte.id}" />
                         <h:panelGroup/>
                         Nom du titulaire :
-                        <h:inputText id="nom" value="#{modification.compte.nom}" required="true"/>
-                        <h:message for="typeMouvement"/>
+                        <h:inputText id="nom" value="#{modification.nom}" required="true"/>
+                        <h:message for="nom"/>
                         Montant du mouvement :
-                        <h:inputText id="solde" value="#{modification.compte.solde}"
+                        <h:inputText id="montant" value="#{modification.solde}"
                                      required="true"/>
                         <h:message for="montant"/>
                     </h:panelGrid>

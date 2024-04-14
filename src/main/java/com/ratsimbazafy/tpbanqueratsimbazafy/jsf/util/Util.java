@@ -36,6 +36,21 @@ public class Util {
     FacesContext.getCurrentInstance().addMessage(clientId, msg);
   }
 
+  public static void VerifExecption(Exception e){
+      if (e.getMessage().contains("nom du compte ne peut pas être vide")) {
+                Util.messageErreur(e.getMessage(), "nom vide", "form:nom");
+            }if (e.getMessage().contains("solde du compte ne peut pas être négatif")) {
+                Util.messageErreur(e.getMessage(), "solde négatif", "form:montant");
+            }if (e.getMessage().contains("le montant est suppérieur au solde.")) {
+                Util.messageErreur(e.getMessage(), "erreur montant", "form:montant");
+            }if (e.getMessage().contains("Aucun compte avec cette id.")) {
+                 Util.messageErreur(e.getMessage(), "Aucun compte avec cette id. ", "form:source");
+            }
+            else {
+                Util.messageErreur("Erreur lors de la création du compte", e.getMessage(), null);
+            }
+            
+  }
   /**
    * Message qui n'est pas attaché à un composant particulier.
    * @param messageDetail

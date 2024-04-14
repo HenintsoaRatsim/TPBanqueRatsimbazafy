@@ -4,6 +4,8 @@
  */
 package com.ratsimbazafy.tpbanqueratsimbazafy.jsf;
 
+import com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire;
+import com.ratsimbazafy.tpbanqueratsimbazafy.jsf.util.Util;
 import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -56,8 +58,15 @@ public class Transfert implements Serializable {
     }
 
     public String transferer() {
-        boolean rep=gestionnaireCompte.transferer(this.idSource, this.idDestinataire, this.montant);
-        if(!rep)return null;
-        return "listeComptes?faces-redirect=true";
+        try {
+            CompteBancaire c_source = this.gestionnaireCompte.findById(this.getIdSource());
+            CompteBancaire c_destinatire = this.gestionnaireCompte.findById(this.getIdDestinataire());
+            gestionnaireCompte.transferer(c_source, c_destinatire, this.getMontant());
+            Util.addFlashInfoMessage("Transfert de " + montant + "  correctement effectué entre " + c_source.getNom() + " et " + c_destinatire.getNom());
+            return "listeComptes?faces-redirect=true";
+        } catch (Exception e) {
+            Util.VerifExecption(e);
+            return null;
+        }
     }
 }

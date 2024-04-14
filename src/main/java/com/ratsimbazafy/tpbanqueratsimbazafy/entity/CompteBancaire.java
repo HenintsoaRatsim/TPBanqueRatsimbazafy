@@ -38,6 +38,12 @@ public class CompteBancaire implements Serializable {
     }
 
     public CompteBancaire(String nom, int solde) {
+        if (nom == null || nom.trim().isEmpty()) {
+            throw new RuntimeException("Le nom du compte ne peut pas être vide ou null.");
+        }
+        if (solde < 0) {
+            throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
+        }
         this.nom = nom;
         this.solde = solde;
     }
@@ -51,6 +57,9 @@ public class CompteBancaire implements Serializable {
     }
 
     public void setNom(String Nom) {
+        if (nom == null || nom.trim().isEmpty()) {
+            throw new RuntimeException("Le nom du compte ne peut pas être vide ou null.");
+        }
         this.nom = Nom;
     }
 
@@ -59,19 +68,27 @@ public class CompteBancaire implements Serializable {
     }
 
     public void setSolde(int Solde) {
+        if (solde < 0) {
+            throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
+        }
         this.solde = Solde;
     }
 
     public void deposer(int montant) {
+        if (montant < 0) {
+            throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
+        }
         solde += montant;
     }
 
     public void retirer(int montant) {
-        if (montant < solde) {
-            solde -= montant;
-        } else {
-            solde = 0;
+        if (montant < 0) {
+            throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
         }
+        if (montant > solde) {
+            throw new RuntimeException("le montant est suppérieur au solde.");
+        } 
+        solde -= montant;
     }
 
     @Override

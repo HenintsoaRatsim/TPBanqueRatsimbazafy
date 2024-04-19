@@ -91,7 +91,7 @@ public class CompteBancaire implements Serializable {
         if (montant < 0) {
             throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
         }
-        operations.add(new OperationBancaire("Créditer  compte", solde));
+        operations.add(new OperationBancaire("Créditer  compte", montant));
         solde += montant;
     }
 
@@ -102,7 +102,7 @@ public class CompteBancaire implements Serializable {
         if (montant > solde) {
             throw new RuntimeException("le montant est suppérieur au solde.");
         } 
-                operations.add(new OperationBancaire("Débiter  compte", -solde));
+                operations.add(new OperationBancaire("Débiter  compte", -montant));
 
         solde -= montant;
     }

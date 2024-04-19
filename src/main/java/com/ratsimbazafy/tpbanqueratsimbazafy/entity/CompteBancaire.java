@@ -4,15 +4,20 @@
  */
 package com.ratsimbazafy.tpbanqueratsimbazafy.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,6 +38,13 @@ public class CompteBancaire implements Serializable {
     private String nom;
     private int solde;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<OperationBancaire> operations = new ArrayList<>();
+
+    public List<OperationBancaire> getOperations() {
+        return operations;
+    }
+    
     public CompteBancaire() {
 
     }
@@ -44,6 +56,7 @@ public class CompteBancaire implements Serializable {
         if (solde < 0) {
             throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
         }
+        operations.add(new OperationBancaire("Création du compte", solde));
         this.nom = nom;
         this.solde = solde;
     }
@@ -78,6 +91,7 @@ public class CompteBancaire implements Serializable {
         if (montant < 0) {
             throw new RuntimeException("Le solde du compte ne peut pas être négatif.");
         }
+        operations.add(new OperationBancaire("Créditer  compte", solde));
         solde += montant;
     }
 
@@ -88,6 +102,8 @@ public class CompteBancaire implements Serializable {
         if (montant > solde) {
             throw new RuntimeException("le montant est suppérieur au solde.");
         } 
+                operations.add(new OperationBancaire("Débiter  compte", -solde));
+
         solde -= montant;
     }
 
@@ -116,4 +132,5 @@ public class CompteBancaire implements Serializable {
         return "com.ratsimbazafy.tpbanqueratsimbazafy.entity.CompteBancaire[ id=" + id + " ]";
     }
 
+    
 }

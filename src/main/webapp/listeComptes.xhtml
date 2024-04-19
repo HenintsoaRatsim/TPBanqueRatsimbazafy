@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
 
@@ -16,29 +17,29 @@
             <ui:define name="content">
 
                 <h:form>
-                    <h:dataTable value="#{listeComptes.allComptes}"
+                    <p:dataTable value="#{listeComptes.allComptes}"
                                  var="item">
-                        <h:column>
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Id"/>
                             </f:facet>
                             <h:link outcome="mouvement?id=#{item.id}" 
                                     value="#{item.id}"/>
-                        </h:column>
+                        </p:column>
 
-                        <h:column>
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Nom"/>
                             </f:facet>
                             <h:outputText value="#{item.nom}"/>
-                        </h:column>
-                        <h:column>
+                        </p:column>
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Solde"/>
                             </f:facet>
                             <h:outputText value="#{item.solde}"/>
-                        </h:column>
-                        <h:column>
+                        </p:column>
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Opérations"/>
                             </f:facet>
@@ -46,16 +47,16 @@
                                            title="Supprimer le compte de #{item.nom}" >
                                 <h:graphicImage name="images/del.png"/>
                             </h:commandLink>
-                        </h:column>
-                        <h:column>
+                        </p:column>
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Modification"/>
                             </f:facet>
                             <h:link outcome="modification?id=#{item.id}" 
                                     value="Modification"
                                     title="Modifier le compte de #{item.nom}" />
-                        </h:column>
-                    </h:dataTable>
+                        </p:column>
+                    </p:dataTable>
                 </h:form>
                 <h:messages/> 
             </ui:define>

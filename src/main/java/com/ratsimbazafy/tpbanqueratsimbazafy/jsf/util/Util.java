@@ -46,10 +46,7 @@ public class Util {
             }if (e.getMessage().contains("Aucun compte avec cette id.")) {
                  Util.messageErreur(e.getMessage(), "Aucun compte avec cette id. ", "form:source");
             }
-            else {
-                Util.messageErreur("Erreur lors de la création du compte", e.getMessage(), null);
-            }
-            
+             
   }
   /**
    * Message qui n'est pas attaché à un composant particulier.

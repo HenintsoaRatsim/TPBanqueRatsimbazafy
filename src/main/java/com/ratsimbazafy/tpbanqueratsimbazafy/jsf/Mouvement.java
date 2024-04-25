@@ -10,6 +10,7 @@ import com.ratsimbazafy.tpbanqueratsimbazafy.service.GestionnaireCompte;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import java.io.Serializable;
 
 /**
@@ -84,6 +85,10 @@ public class Mouvement implements Serializable {
             return "listeComptes?faces-redirect=true";
         } catch (Exception e) {
             Util.VerifExecption(e);
+            if (e instanceof OptimisticLockException) {
+                Util.messageErreur("Le compte de " + compte.getNom()
+                        + " a été modifié ou supprimé par un autre utilisateur !");
+            }
             return null;
         }
     }
